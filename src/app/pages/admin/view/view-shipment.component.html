@@ -1,0 +1,108 @@
+<div *ngIf="isLoad">
+    <div class="w-90dvw border-soft p-4 mt-5">
+        <h3>Ver viaje</h3>
+        <div class="card">
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Origen</th>
+                  <th scope="col">Destino</th>
+                  <th scope="col">Unidad</th>
+                  <th scope="col">Folio de Viaje</th>
+                  <th scope="col">Ruta</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th> {{ shipment.customer_name }} </th>
+                  <td> {{ shipment.origin }} </td>
+                  <td> {{ shipment.destination }}  </td>
+                  <td> {{ shipment.vehicle_type }} </td>
+                  <td> {{ shipment.folio }} </td>
+                  <td> {{ shipment.customer_route }} </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <form
+        [formGroup]="shipmentForm"
+        id="shipmentForm">
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label>Cliente</label>
+                <input type="text" class="form-control" formControlName="customer_name" readonly>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Ruta</label>
+                <input type="text" class="form-control" formControlName="customer_route_name" readonly>
+              </div>
+              <div class="form-group col-md-3">
+                <label>Precio viaje</label>
+                <input type="text" class="form-control" formControlName="cost" readonly>
+              </div> 
+              <div class="form-group col-md-3">
+                <label>Referencia cliente</label>
+                <input type="text" class="form-control" formControlName="customer_invoice" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              
+              <div class="form-group col-md-3">
+                <label>Operador</label>
+                <input type="text" class="form-control" formControlName="vehicle_operator_name" readonly>
+              </div>
+              <div class="form-group col-md-3">
+                <label>Tabulador</label>
+                <input class="form-control" formControlName="tab" readonly>
+              </div>
+              <div class="form-group col-md-3">
+                <label>Vehiculo</label>
+                <input type="text" class="form-control" formControlName="vehicle_one_name" readonly>
+              </div>
+              <div class="form-group col-md-3">
+                <label>Remolque</label>
+                <input type="text" class="form-control" formControlName="trailer_one_name" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label>Dolly</label>
+                <input type="text" class="form-control" formControlName="dolly" readonly>
+              </div>
+              <div class="form-group col-md-3">
+                <label>Remolque 2</label>
+                <input type="text" class="form-control" formControlName="" readonly>
+              </div>
+                
+                <div class="form-group col-md-3">
+                  <label>Temperatura °C</label>
+                  <input type="text" class="form-control" formControlName="temperature" readonly>
+                </div>
+                <div class="form-group col-md-3">
+                  <label>Temperatura °F</label>
+                  <input type="text" class="form-control" formControlName="temperatureF" readonly>
+                </div>
+            </div>
+          </form>
+    </div>
+    <div class="w-50 m-auto p-3">
+        <google-map
+        [center]="center"
+        [options]="options"
+        >
+            <map-marker
+                *ngFor="let marker of markers"
+                [position]="marker.position"
+                [label]="marker.label"
+                [title]="marker.title"
+                [options]="marker.options"
+            >
+            </map-marker>
+        </google-map>
+    </div>
+</div>

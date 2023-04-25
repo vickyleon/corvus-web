@@ -1,0 +1,197 @@
+
+
+<div class="mt-5">
+  <div class="mr-3 text-right">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newTripModal">
+      Crear Viaje
+    </button>
+
+  </div>
+  <div class="table-responsive w-auto p-3 tableFixHead">
+    <table class="table table-striped border-type-1">
+        <thead class="thead-dark">
+            <tr>
+              <th>Estatus</th>
+              <th>FV</th>
+              <th>Fecha de carga/descarga</th>
+              <th>Cliente/Referencia</th>
+              <th>Origen/Destino</th>
+              <th>Operador/Economico</th>
+              <th>Tipo de carga</th>
+              <th>Tipo de ruta</th>
+              <th>Precio viaje</th>
+              <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let shipment of shipments">
+              <td>
+                <span class="badge badge-pill badge-primary">
+                  {{ shipment.status }}
+                  
+                </span>  
+                <p class="text-warning">
+                {{ shipment.is_invoiced  }}        
+
+                </p>     
+              </td>
+              <td>
+
+                {{ shipment.monitoring?.shipment_name }}
+              </td>
+              <td class="d-flex f-column">
+                <div>
+                    {{ shipment.departure_date }}
+                </div>
+                <div>
+                    {{ shipment.arrival_date }}
+                </div>
+              </td>
+              <td>
+                {{ shipment.customer_name }}
+                <p>
+                  {{ shipment.customer_invoice }}
+                </p>
+              </td>
+              <td class="d-flex f-column">
+                <div>
+                    {{ shipment.origin }}
+                </div>
+                <div>
+                    {{ shipment.destination }}
+                </div>
+              </td>
+              <td>{{ shipment.vehicle_operator_name }}</td>
+              <td>
+                {{ shipment.load_type }}
+                {{ shipment.temperature }} °C / {{ convertF  (shipment.temperature)   }} °F
+              </td>
+              <td>{{ shipment.trip_type }}</td>
+              <td>{{ shipment.cost | currency }}</td>
+              <td>
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <a  class="dropdown-item"  [routerLink]="['/admin','view', shipment.id ]">Ver</a>
+                    <a class="dropdown-item" [routerLink]="['/admin','view', shipment.id ]">Editar</a>
+                    <a class="dropdown-item" [routerLink]="['/admin','view', shipment.id ]">Eliminar</a>
+                  </div>
+                </div>
+                
+              </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+  <div class="text-right d-flex justify-content-end m-3 ">
+    <button (click)="changePage(-1)" class="btn btn-secondary mr-3">Anteriores</button>
+
+    <button (click)="changePage(1)" class="btn btn-secondary">Siguientes</button>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-xl" id="newTripModal" tabindex="-1" role="dialog" aria-labelledby="newTripModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newTripModalLabel">Crear un viaje</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="border-soft p-3 mt-5 mb-2">
+          <form
+          [formGroup]="shipmentForm"
+          (ngSubmit)="createShip()"
+          id="shipmentForm">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Cliente</label>
+                  <select class="form-control"
+                        formControlName="customer">
+                    <option *ngFor="let customer of customers"
+                        [value]="customer.id">
+                        {{  customer.short_name  }}
+                    </option>
+                  </select>
+      
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Ruta</label>
+                  <select class="form-control"
+                        formControlName="customer_route">
+                    <option *ngFor="let route of routes"
+                        [value]="route.id">
+                        {{  route.id  }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label>Precio viaje</label>
+                    <input type="text" class="form-control" formControlName="price">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Referencia cliente</label>
+                    <input type="text" class="form-control" formControlName="points_information">
+                  </div>
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label>Operador</label>
+                    <select class="form-control"
+                          formControlName="operator">
+                      <option *ngFor="let vehicleOperator of vehicleOperators"
+                          [value]="vehicleOperator.id">
+                          {{  vehicleOperator.name }} {{  vehicleOperator.paternal_surname  }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Tabulador</label>
+                    <select class="form-control" formControlName="tabs">
+                      <option selected>Choose...</option>
+                      <option>3</option>
+                    </select>
+                  </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Vehiculo</label>
+                  <select class="form-control"
+                          formControlName="vehicle">
+                      <option *ngFor="let vehicleType of vehicleTypes"
+                          [value]="vehicleType.id">
+                          {{  vehicleType.name }}
+                      </option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Vehiculo</label>
+                  <select class="form-control"
+                          formControlName="vehicle_operator">
+                      <option *ngFor="let vehicleOperator of vehicleOperators"
+                          [value]="vehicleOperator.id">
+                          {{  vehicleOperator.name }} {{  vehicleOperator.paternal_surname  }}
+                      </option>
+                  </select>
+                </div>
+              </div>
+              <button [disabled]="!shipmentForm.valid" type="submit" class="btn btn-primary">Crear viaje</button>
+            </form>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+.w-40dvw {
+    width: 40dvw;
+    margin: 0 auto;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+.w-100 {
+    width: 100%;
+}
+
+label,
+.input-field {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: .6rem .3rem;
+    width: 100%;
+    text-align: center;
+    border-radius: .2rem;
+    outline: none;
+}
+.input-field,
+.btn {
+    border: solid .01rem #000;
+}
+.btn {
+    cursor: pointer;
+    background-color: #712cf9;
+    color: #fff;
+    padding: .8rem .3rem;
+    width: 100%;
+    font-size: larger;
+}
+.btn:disabled {
+    background-color: #27046e;
+}
+
+
+.background-return{
+    background-image: linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/assets/img/trip.jpg");
+    background-position: 50% 50%;
+    background-size: cover;
+    height: 100vh;
+}
+.h100{
+    height: calc(100vh);
+}
+
+.title-h2{
+    font-family: 'Playfair Display', serif !important;
+    line-height: 1;
+    font-weight: 700 !important;
+}
+.line{
+    width: 100px;
+    height: 3px;
+    margin: 30px auto 0 0;
+    border-color: #454545;
+    border: solid;
+}
