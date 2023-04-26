@@ -43,13 +43,16 @@ export class ViewShipmentComponent implements OnInit {
     temperatureF: ['']
   });
 
-  center: google.maps.LatLngLiteral;
+  center: google.maps.LatLngLiteral = {
+    lat: 19.00,
+    lng: -99.000
+  };
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
     zoomControl: true,
     scrollwheel: false,
     disableDoubleClickZoom: true,
-    maxZoom: 15,
+    maxZoom: 6,
     minZoom: 1,
   };
 
@@ -89,7 +92,7 @@ export class ViewShipmentComponent implements OnInit {
               this.cordsOrigin.push(address);
 
               this.markers.push({
-                centerProperty: {
+                position: {
                   lat: Number(address.latitude),
                   lng: Number(address.longitude)
                 },
@@ -102,9 +105,17 @@ export class ViewShipmentComponent implements OnInit {
                   animation: google.maps.Animation.DROP,
                 },
               })
-                            
+              
+            
+              // Recenter the map now that it's been redrawn               
+              var reCenter = new google.maps.LatLng(address.latitude, address.longitude);
+              this.map.center.lat = address.latitude;
+              this.map.center.lng = address.longitude;
 
-              console.log(navigator.geolocation.watchPosition);
+              this.center = {
+                lat: address.latitude,
+                lng: address.longitude
+              }
 
             }if(address.name === this.shipment.destination ){
               this.cords.push(address);
@@ -131,10 +142,6 @@ export class ViewShipmentComponent implements OnInit {
 
         });
 
-        
-
-        
-        
     });
   }
   loadShipment(id: number) {
