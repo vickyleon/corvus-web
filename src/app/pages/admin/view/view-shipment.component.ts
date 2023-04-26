@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ShipmentsService } from '../../../services/shipments.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { delay, map } from 'rxjs';
+import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 
 interface cords {
   latitude: number;
@@ -22,6 +23,11 @@ export class ViewShipmentComponent implements OnInit {
   public cordsOrigin: any[] = [];
   public cords: any[] = [];
 
+  @ViewChild('myGoogleMap', { static: false })
+  map!: GoogleMap;
+  @ViewChild(MapInfoWindow, { static: false })
+  info!: MapInfoWindow;
+
 
   public shipmentForm = this.fb.group({
     customer_name: ['', Validators.required],
@@ -37,14 +43,14 @@ export class ViewShipmentComponent implements OnInit {
     temperatureF: ['']
   });
 
-  center!: google.maps.LatLngLiteral;
+  center: google.maps.LatLngLiteral;
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
-    zoomControl: false,
+    zoomControl: true,
     scrollwheel: false,
     disableDoubleClickZoom: true,
     maxZoom: 15,
-    minZoom: 8,
+    minZoom: 1,
   };
 
   constructor(
@@ -54,16 +60,24 @@ export class ViewShipmentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position);
+      this.center = {
+        lat: Number(this.cordsOrigin[0].latitude),
+        lng: Number(this.cordsOrigin[0].longitude),
+      }
+    })
+    
     this.activatedRoute.params.subscribe(({ id }) => {
       this.loadShipment(id);
     });
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.center = {
-        lat: Number(this.cords[0].latitude),
-        lng: Number(this.cords[0].longitude),
-      };
-      this.addMarker();
-    });
+
+    
+
+  }
+  ngAfterViewInit(){
+   
   }
 
   getLatLongLocation() {
@@ -73,19 +87,53 @@ export class ViewShipmentComponent implements OnInit {
         resp.forEach((address: any) => {
             if(address.point_type == "ORIGIN"){
               this.cordsOrigin.push(address);
-              navigator.geolocation.getCurrentPosition((position) => {
-                this.center = {
+
+              this.markers.push({
+                centerProperty: {
                   lat: Number(address.latitude),
-                  lng: Number(address.longitude),
-                };
-                this.addMarker();
-              });
+                  lng: Number(address.longitude)
+                },
+                label: {
+                  color: 'white',
+                  text: 'Recolección ' + (this.markers.length + 1),
+                },
+                title: address.name ,
+                options: {
+                  animation: google.maps.Animation.DROP,
+                },
+              })
+                            
+
+              console.log(navigator.geolocation.watchPosition);
+
             }if(address.name === this.shipment.destination ){
               this.cords.push(address);
-            }
+            
 
-            console.log(this.cords)
+              this.markers.push({
+                position: {
+                  lat: Number(address.latitude),
+                  lng: Number(address.longitude)
+                },
+                label: {
+                  color: 'white',
+                  text: 'Destino ' + (this.markers.length + 1),
+                },
+                title: address.name,
+                info: 'Marker info ' + (this.markers.length + 1),
+                options: {
+                  animation: google.maps.Animation.DROP,
+                },
+              })
+            }
+    
+            
+
         });
+
+        
+
+        
         
     });
   }
