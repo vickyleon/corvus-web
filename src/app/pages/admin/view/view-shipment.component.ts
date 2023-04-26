@@ -19,7 +19,9 @@ export class ViewShipmentComponent implements OnInit {
   public isLoad: boolean = false;
   public markers: any[] = [];
   public locations: any[] = [];
-  public cords: cords[] = [];
+  public cordsOrigin: any[] = [];
+  public cords: any[] = [];
+
 
   public shipmentForm = this.fb.group({
     customer_name: ['', Validators.required],
@@ -68,10 +70,23 @@ export class ViewShipmentComponent implements OnInit {
     this.shipmentsService
       .getLocation(this.shipment.customer)
       .subscribe((resp: any) => {
-        this.cords = [{ 
-          latitude: resp[0].latitude,
-          longitude: resp[0].longitude
-        }];
+        resp.forEach((address: any) => {
+            if(address.point_type == "ORIGIN"){
+              this.cordsOrigin.push(address);
+              navigator.geolocation.getCurrentPosition((position) => {
+                this.center = {
+                  lat: Number(address.latitude),
+                  lng: Number(address.longitude),
+                };
+                this.addMarker();
+              });
+            }if(address.name === this.shipment.destination ){
+              this.cords.push(address);
+            }
+
+            console.log(this.cords)
+        });
+        
     });
   }
   loadShipment(id: number) {
@@ -81,7 +96,6 @@ export class ViewShipmentComponent implements OnInit {
       .subscribe((resp: any) => {
         this.isLoad = true;
         this.shipment = resp[0];
-        console.log(this.shipment);
         this.shipmentForm.patchValue({
           customer_name: this.shipment.customer_name,
           customer_route_name: this.shipment.customer_route_name,
@@ -121,4 +135,7 @@ export class ViewShipmentComponent implements OnInit {
     });
   }
   editShip() {}
+
+
+
 }

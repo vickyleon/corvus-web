@@ -90,19 +90,93 @@
             </div>
           </form>
     </div>
-    <div class="w-50 m-auto p-3">
-        <google-map
-        [center]="center"
-        [options]="options"
-        >
-            <map-marker
-                *ngFor="let marker of markers"
-                [position]="marker.position"
-                [label]="marker.label"
-                [title]="marker.title"
-                [options]="marker.options"
-            >
-            </map-marker>
-        </google-map>
+    <div class="row">
+      <div class="col-6">
+        <div class="card" >
+          <div class="card-body">
+            <h5 class="card-title">
+              Recolección 1 
+            </h5>
+            <div class="card-text">
+              <div class="form-group ">
+                <label>Recolección</label>
+                <input type="text" class="form-control" value="{{ cordsOrigin[0].name }}"  readonly>
+              </div>
+
+              <div class="form-group ">
+                <label>Dirección</label>
+                <input type="text" class="form-control" value="{{ cordsOrigin[0].street  }}"  readonly>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Fecha de carga </label>
+                    <input type="text" class="form-control" value="{{ shipment.departure_date }}"  readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Hora de carga </label>
+                    <input type="text" class="form-control" value="{{ shipment.departure_time }}"  readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card"  *ngFor="let cord of cords">
+          <div class="card-body">
+            <h5 class="card-title">
+              Descarga
+            </h5>
+            <div class="card-text">
+              <div class="form-group ">
+                <label>Recolección</label>
+                <input type="text" class="form-control" value="{{ cord.name }}"  readonly>
+              </div>
+
+              <div class="form-group ">
+                <label>Dirección</label>
+                <input type="text" class="form-control" value="{{ cord.street  }}"  readonly>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Fecha de carga </label>
+                    <input type="text" class="form-control" value="{{ shipment.departure_date }}"  readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label>Hora de carga </label>
+                    <input type="text" class="form-control" value="{{ shipment.departure_time }}"  readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="">
+          <google-map
+          [center]="center"
+          [options]="options"
+          >
+              <map-marker
+                  *ngFor="let marker of markers"
+                  [position]="marker.position"
+                  [label]="marker.label"
+                  [title]="marker.title"
+                  [options]="marker.options"
+              >
+              </map-marker>
+          </google-map>
+        </div>
+      </div>
     </div>
 </div>
